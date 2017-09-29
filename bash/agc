@@ -1,0 +1,34 @@
+#!/bin/bash
+
+target_dir=$1
+arch_dir=arch/$2
+mach_dir=mach-$3
+
+rm -f *cscope.*
+rm -f tags
+
+if [ "$target_dir"x != ""x ] ; then
+		cd $target_dir
+fi
+
+if [ "$arch_dir" != "arch/" ] ; then
+	if [ "$mach_dir" != "mach-" ] ; then
+		find . -path "./$arch_dir/$mach_dir/*" -name '*.[hcSs]' -print > cscope.files
+	else
+		find . -path "./$arch_dir/*" -name '*.[hcSs]' -print > cscope.files
+	fi
+	find . -name '*.[hcsS]' | grep -v '^\./arch/' >> cscope.files
+else
+	find . -name '*.[hcsS]' > cscope.files
+fi
+
+echo "generating ctags! please hold on!"
+ctags -L cscope.files
+
+echo "generating cscope.files! please hold on!"
+if [ "$target_dir"x = ""x ] ; then
+		cscope -bkq -i cscope.files 
+else
+		cscope -bkq -i cscope.files -P $target_dir
+fi
+#rm -f cscope.files

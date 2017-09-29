@@ -1,0 +1,23 @@
+#!/bin/bash
+filename=$1
+if [ "string"$filename == "string" ] ; then
+	filename=`pwd`
+#	echo $filename
+fi
+path2file=`dirname $filename`
+
+#echo $path2file
+cd $path2file
+while :
+do
+	if [ -e cscope.out ] ; then
+		_pwd=`pwd`
+		break 
+	elif [ "`pwd`"x = "/"x ] ; then
+		_pwd=
+		break
+	else 
+		cd ..
+	fi
+done
+echo $_pwd
